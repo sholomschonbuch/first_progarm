@@ -35,7 +35,6 @@ class categorie:
         for money in self.paid:
             total_amount += money
         return total_amount
-    def
     def __str__(self):
         return f"Name: {self.name} \ntotal: {self.total()} \nowe: {self.total() - self.total_paid()}"
     

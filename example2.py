@@ -13,7 +13,7 @@ import pickle
 import os.path
 from os import path
 
-class Ui_MainWindow(object):#c
+class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(800, 600)
@@ -70,7 +70,7 @@ class Ui_MainWindow(object):#c
 
         #self made:
         self.addPayment = QtWidgets.QPushButton(self.centralwidget)
-        self.addPayment.setGeometry(QtCore.QRect(450, 200, 75, 23))
+        self.addPayment.setGeometry(QtCore.QRect(450, 200, 100, 23))
         self.addPayment.setObjectName("addPayment")
 
         #added Itmes
@@ -148,8 +148,29 @@ class Ui_MainWindow(object):#c
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
+    style = """
+        QWidget{
+            background: #262d37;
+            color: #fff;
+        }
+        QPushButton{
+            background: #0577a8;
+            padding: 5px 5px;
+            border: 1px #f00 solid;
+            font-weight: bold;           
+        }
+        QPushButton#addPayment{
+            background: #f00;
+        }
+        QPushButton:hover{
+            background: #0f0;
+        }
+        
+    """
+    app.setStyleSheet(style)
     MainWindow = QtWidgets.QMainWindow()
     ui = Ui_MainWindow()
     ui.setupUi(MainWindow)
     MainWindow.show()
     sys.exit(app.exec_())
+
