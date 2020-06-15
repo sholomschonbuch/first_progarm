@@ -8,7 +8,8 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from classes import categorie
+from classes import categorie, job
+
 import pickle 
 import os.path
 from os import path
@@ -54,6 +55,11 @@ class Ui_MainWindow(object):
         self.projectValue.setMaximum(1000000.0)
         self.projectValue.setObjectName("projectValue")
 
+        self.paid_amount_to_you = QtWidgets.QLabel(self.centralwidget)
+        self.paid_amount_to_you.setGeometry(QtCore.QRect(500, 50, 261, 16))
+        self.paid_amount_to_you.setObjectName("paid_amount_to_you")
+        
+
         self.profit = QtWidgets.QLabel(self.centralwidget)
         self.profit.setGeometry(QtCore.QRect(240, 490, 261, 16))
         self.profit.setObjectName("profit")
@@ -73,20 +79,23 @@ class Ui_MainWindow(object):
         self.addPayment.setGeometry(QtCore.QRect(450, 200, 100, 23))
         self.addPayment.setObjectName("addPayment")
 
+
         #added Itmes
         if os.path.isfile("catagories.data"):
             with open("catagories.data", "rb") as load:
-                self.category_list = pickle.load(load)
+                self.job_list = pickle.load(load)
                 self.update_list()
                 #load combo box
-                for combo in self.category_list:
+                for combo in self.job_list:
                     self.comboBox.addItem(combo.name)
         else:
-            self.category_list = []
+            job1 = job("blah", 50)
+            self.job_list = [job1]
         self.createCategory.clicked.connect(self.add_category)
         self.addCategory.clicked.connect(self.add_cost)
         self.addPayment.clicked.connect(self.add_payment)
         self.profit.setText("0")
+        self.paid_amount_to_you.setText("0")
         self.comboBox.addItem(self.lineCategoryName.text())
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
@@ -98,19 +107,21 @@ class Ui_MainWindow(object):
         self.addPayment.setText(_translate("MainWindow", "Add Payment"))
         self.createCategory.setText(_translate("MainWindow", "Create Category"))
         self.profit.setText(_translate("MainWindow", "0"))
+        #self.paid_amount_to_you.setText(_translate("MainWindow", "0"))
 
     def add_category(self):
         print("Adding Category")
         if self.lineCategoryName.text() != "":
-            self.category_list.append(categorie(self.lineCategoryName.text()))
+            #self.job_list.append(categorie(self.lineCategoryName.text()))
+            self.job_list[0].categorie_list.append(categorie(self.lineCategoryName.text()))
             self.comboBox.addItem(self.lineCategoryName.text())
             self.lineCategoryName.setText("")
-            print(self.category_list)
+            print(self.job_list)
             self.update_list()
 
     def add_cost(self):
         print("add cost")
-        for item in self.category_list:
+        for item in self.job_list[0].categorie_list:
             if item.name == self.comboBox.currentText():
                 item.add(self.doubleCost.value(), str(self.dateEdit.date()))
                 self.update_list()
@@ -118,7 +129,7 @@ class Ui_MainWindow(object):
 
     def add_payment(self):
         print("add paid")
-        for item in self.category_list:
+        for item in self.job_list[0].categorie_list:
             if item.name == self.comboBox.currentText():
                 item.add_paid(self.doubleCost.value(), str(self.dateEdit.date()))
                 self.update_list()
@@ -127,20 +138,28 @@ class Ui_MainWindow(object):
     
     def update_list(self):
         self.listWidget.clear()
-        for item in self.category_list:
+        for item in self.job_list[0].categorie_list:
             name = item.name
             self.listWidget.addItem(f"{name}\tCost: {item.total()}\tPaid: {item.total_paid()}\tOwe: {item.total() - item.total_paid()}")
         self.update_profit()
+        self.update_paid_amount_to_you()
         self.update_data()
 
     def update_data(self):
         with open("catagories.data", "wb") as data_update:
-            pickle.dump(self.category_list, data_update)
+            pickle.dump(self.job_list, data_update)
+
+    def update_paid_amount_to_you(self):
+        total_cost = 0
+        for item in self.job_list[0].categorie_list:
+            total_cost += item.total()
+
+        self.paid_amount_to_you.setText(f"{self.projectValue.value()} ")
 
 
     def update_profit(self):
         total_cost = 0
-        for item in self.category_list:
+        for item in self.job_list[0].categorie_list:
             total_cost += item.total()
 
         self.profit.setText(f"{self.projectValue.value() - total_cost} ")
@@ -150,8 +169,8 @@ if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     style = """
         QWidget{
-            background: #262d37;
-            color: #fff;
+            background: #ccdade;
+            color: #000;
         }
         QPushButton{
             background: #0577a8;
