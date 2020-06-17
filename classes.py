@@ -1,5 +1,6 @@
+
 class job:
-    def __init__(self, name, value):
+    def __init__(self, name, value = 0):
         self.name = name
         self.value = value
         self.categorie_list = []

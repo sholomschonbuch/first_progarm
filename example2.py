@@ -38,6 +38,21 @@ class Ui_MainWindow(object):
         self.doubleCost.setMaximum(1000000.0)
         self.doubleCost.setObjectName("doubleCost")
         
+        #sholom added job name box and button
+        jobx = 50
+        joby = 75
+        self.lineJobName = QtWidgets.QLineEdit(self.centralwidget)
+        self.lineJobName.setGeometry(QtCore.QRect(joby, jobx, 113, 20))
+        self.lineJobName.setObjectName("lineJobName")
+
+        self.createjob = QtWidgets.QPushButton(self.centralwidget)
+        self.createjob.setGeometry(QtCore.QRect(joby + 120, jobx, 91, 23))
+        self.createjob.setObjectName("createjob")
+
+        self.comboBoxJob = QtWidgets.QComboBox(self.centralwidget)
+        self.comboBoxJob.setGeometry(QtCore.QRect(80, 120, 131, 22))
+        self.comboBoxJob.setObjectName("comboBoxJob")
+        #/
         self.lineCategoryName = QtWidgets.QLineEdit(self.centralwidget)
         self.lineCategoryName.setGeometry(QtCore.QRect(310, 120, 113, 20))
         self.lineCategoryName.setObjectName("lineCategoryName")
@@ -81,18 +96,23 @@ class Ui_MainWindow(object):
 
 
         #added Itmes
+        
         if os.path.isfile("catagories.data"):
             with open("catagories.data", "rb") as load:
                 self.job_list = pickle.load(load)
-                print(self.job_list[0].value)
+                print(self.job_list)
                 self.update_list()
                 #load combo box
-                for combo in self.job_list:
+                for combo in self.job_list[0].categorie_list:
                     self.comboBox.addItem(combo.name)
+                for combo in self.job_list:
+                    self.comboBoxJob.addItem(combo.name)
+
         else:
             job1 = job("blah", 50)
             self.job_list = [job1]
         self.createCategory.clicked.connect(self.add_category)
+        self.createjob.clicked.connect(self.add_job)
         self.addCategory.clicked.connect(self.add_cost)
         self.addPayment.clicked.connect(self.add_payment)
         self.projectValue.valueChanged.connect(self.valuechange)
@@ -101,6 +121,8 @@ class Ui_MainWindow(object):
      
         self.projectValue.setValue(self.job_list[0].value)
         self.comboBox.addItem(self.lineCategoryName.text())
+        self.comboBoxJob.addItem(self.lineJobName.text())
+        
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
@@ -123,6 +145,15 @@ class Ui_MainWindow(object):
             print(self.job_list)
             self.update_list()
 
+    def add_job(self):
+        print("Adding Job")
+        if self.lineJobName.text() != "":
+            self.job_list.append(job(self.lineJobName.text(), self.projectValue.value()))
+            self.comboBoxJob.addItem(self.lineJobName.text())
+            self.lineJobName.setText("")
+            print(self.job_list)
+            self.update_data()
+ 
     def add_cost(self):
         print("add cost")
         for item in self.job_list[0].categorie_list:
@@ -155,6 +186,7 @@ class Ui_MainWindow(object):
         self.update_data()
 
     def update_data(self):
+        print(self.job_list, "----")
         with open("catagories.data", "wb") as data_update:
             pickle.dump(self.job_list, data_update)
 
@@ -165,6 +197,7 @@ class Ui_MainWindow(object):
 
         self.paid_amount_to_you.setText(f"{self.projectValue.value()} ")
 
+    
 
     def update_profit(self):
         total_cost = 0
