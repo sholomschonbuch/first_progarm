@@ -84,6 +84,7 @@ class Ui_MainWindow(object):
         if os.path.isfile("catagories.data"):
             with open("catagories.data", "rb") as load:
                 self.job_list = pickle.load(load)
+                print(self.job_list[0].value)
                 self.update_list()
                 #load combo box
                 for combo in self.job_list:
@@ -94,8 +95,11 @@ class Ui_MainWindow(object):
         self.createCategory.clicked.connect(self.add_category)
         self.addCategory.clicked.connect(self.add_cost)
         self.addPayment.clicked.connect(self.add_payment)
+        self.projectValue.valueChanged.connect(self.valuechange)
         self.profit.setText("0")
         self.paid_amount_to_you.setText("0")
+     
+        self.projectValue.setValue(self.job_list[0].value)
         self.comboBox.addItem(self.lineCategoryName.text())
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
@@ -143,6 +147,11 @@ class Ui_MainWindow(object):
             self.listWidget.addItem(f"{name}\tCost: {item.total()}\tPaid: {item.total_paid()}\tOwe: {item.total() - item.total_paid()}")
         self.update_profit()
         self.update_paid_amount_to_you()
+        self.update_data()
+
+    def valuechange(self):
+        print(f"value: {self.projectValue.value()}")
+        self.job_list[0].value = self.projectValue.value()
         self.update_data()
 
     def update_data(self):
