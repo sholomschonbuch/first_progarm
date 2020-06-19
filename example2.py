@@ -37,44 +37,53 @@ class Ui_MainWindow(object):
         self.doubleCost.setGeometry(QtCore.QRect(220, 190, 62, 22))
         self.doubleCost.setMaximum(1000000.0)
         self.doubleCost.setObjectName("doubleCost")
-        
-        #sholom added job name box and button
-        jobx = 50
-        joby = 75
-        self.lineJobName = QtWidgets.QLineEdit(self.centralwidget)
-        self.lineJobName.setGeometry(QtCore.QRect(joby, jobx, 113, 20))
-        self.lineJobName.setObjectName("lineJobName")
-
-        self.createjob = QtWidgets.QPushButton(self.centralwidget)
-        self.createjob.setGeometry(QtCore.QRect(joby + 120, jobx, 91, 23))
-        self.createjob.setObjectName("createjob")
-
-        self.comboBoxJob = QtWidgets.QComboBox(self.centralwidget)
-        self.comboBoxJob.setGeometry(QtCore.QRect(80, 120, 131, 22))
-        self.comboBoxJob.setObjectName("comboBoxJob")
-        #/
-        self.lineCategoryName = QtWidgets.QLineEdit(self.centralwidget)
-        self.lineCategoryName.setGeometry(QtCore.QRect(310, 120, 113, 20))
-        self.lineCategoryName.setObjectName("lineCategoryName")
-
-        self.createCategory = QtWidgets.QPushButton(self.centralwidget)
-        self.createCategory.setGeometry(QtCore.QRect(430, 120, 91, 23))
-        self.createCategory.setObjectName("createCategory")
-
-        self.comboBox = QtWidgets.QComboBox(self.centralwidget)
-        self.comboBox.setGeometry(QtCore.QRect(80, 190, 131, 22))
-        self.comboBox.setObjectName("comboBox")
-
+        #project value: spin and label
+        paidx = 10
+        paidy = 500
         self.projectValue = QtWidgets.QDoubleSpinBox(self.centralwidget)
-        self.projectValue.setGeometry(QtCore.QRect(300, 40, 151, 22))
+        self.projectValue.setGeometry(QtCore.QRect(paidy, paidx, 151, 22))
         self.projectValue.setMaximum(1000000.0)
         self.projectValue.setObjectName("projectValue")
 
         self.paid_amount_to_you = QtWidgets.QLabel(self.centralwidget)
-        self.paid_amount_to_you.setGeometry(QtCore.QRect(500, 50, 261, 16))
+        self.paid_amount_to_you.setGeometry(QtCore.QRect(paidy + 200, paidx, 261, 16))
         self.paid_amount_to_you.setObjectName("paid_amount_to_you")
         
+    #/
+        #job: combo, name and button
+        jobx = 50
+        joby = 230
+        self.lineJobName = QtWidgets.QLineEdit(self.centralwidget)
+        self.lineJobName.setGeometry(QtCore.QRect(joby + 130, jobx, 130, 25))
+        self.lineJobName.setObjectName("lineJobName")
 
+        self.createjob = QtWidgets.QPushButton(self.centralwidget)
+        self.createjob.setGeometry(QtCore.QRect(joby + 250, jobx, 130, 25))
+        self.createjob.setObjectName("createjob")
+
+        self.comboBoxJob = QtWidgets.QComboBox(self.centralwidget)
+        self.comboBoxJob.setGeometry(QtCore.QRect(joby, jobx, 130, 25))
+        self.comboBoxJob.setObjectName("comboBoxJob")
+        #/
+
+        #catagory: combo, name and button
+        catagoryy = 230
+        catagoryx = 100
+        self.comboBox = QtWidgets.QComboBox(self.centralwidget)
+        self.comboBox.setGeometry(QtCore.QRect(catagoryy, catagoryx, 130, 25))
+        self.comboBox.setObjectName("comboBox")
+
+        self.lineCategoryName = QtWidgets.QLineEdit(self.centralwidget)
+        self.lineCategoryName.setGeometry(QtCore.QRect(catagoryy + 130, catagoryx, 130, 25))
+        self.lineCategoryName.setObjectName("lineCategoryName")
+
+        self.createCategory = QtWidgets.QPushButton(self.centralwidget)
+        self.createCategory.setGeometry(QtCore.QRect(catagoryy + 260, catagoryx, 130, 25))
+        self.createCategory.setObjectName("createCategory")
+        #/
+
+        
+        
         self.profit = QtWidgets.QLabel(self.centralwidget)
         self.profit.setGeometry(QtCore.QRect(240, 490, 261, 16))
         self.profit.setObjectName("profit")
@@ -118,7 +127,7 @@ class Ui_MainWindow(object):
         self.projectValue.valueChanged.connect(self.valuechange)
         self.profit.setText("0")
         self.paid_amount_to_you.setText("0")
-     
+        self.comboBoxJob.currentTextChanged.connect(self.changed_job)
         self.projectValue.setValue(self.job_list[0].value)
         self.comboBox.addItem(self.lineCategoryName.text())
         self.comboBoxJob.addItem(self.lineJobName.text())
@@ -132,6 +141,7 @@ class Ui_MainWindow(object):
         self.addCategory.setText(_translate("MainWindow", "Add Cost"))
         self.addPayment.setText(_translate("MainWindow", "Add Payment"))
         self.createCategory.setText(_translate("MainWindow", "Create Category"))
+        self.createjob.setText(_translate("MainWindow", "add job"))
         self.profit.setText(_translate("MainWindow", "0"))
         #self.paid_amount_to_you.setText(_translate("MainWindow", "0"))
 
@@ -153,6 +163,9 @@ class Ui_MainWindow(object):
             self.lineJobName.setText("")
             print(self.job_list)
             self.update_data()
+
+    def changed_job(self):
+        print(self.comboBoxJob.currentText())
  
     def add_cost(self):
         print("add cost")
