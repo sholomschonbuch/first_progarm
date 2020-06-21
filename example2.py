@@ -41,7 +41,7 @@ class Ui_MainWindow(object):
         paidx = 10
         paidy = 500
         self.projectValue = QtWidgets.QDoubleSpinBox(self.centralwidget)
-        self.projectValue.setGeometry(QtCore.QRect(paidy, paidx, 151, 22))
+        self.projectValue.setGeometry(QtCore.QRect(paidy, paidx, 130, 25))
         self.projectValue.setMaximum(1000000.0)
         self.projectValue.setObjectName("projectValue")
 
@@ -53,22 +53,24 @@ class Ui_MainWindow(object):
         #job: combo, name and button
         jobx = 50
         joby = 230
+
+        self.comboBoxJob = QtWidgets.QComboBox(self.centralwidget)
+        self.comboBoxJob.setGeometry(QtCore.QRect(joby, jobx, 130, 25))
+        self.comboBoxJob.setObjectName("comboBoxJob")
+
         self.lineJobName = QtWidgets.QLineEdit(self.centralwidget)
         self.lineJobName.setGeometry(QtCore.QRect(joby + 130, jobx, 130, 25))
         self.lineJobName.setObjectName("lineJobName")
 
         self.createjob = QtWidgets.QPushButton(self.centralwidget)
-        self.createjob.setGeometry(QtCore.QRect(joby + 250, jobx, 130, 25))
-        self.createjob.setObjectName("createjob")
-
-        self.comboBoxJob = QtWidgets.QComboBox(self.centralwidget)
-        self.comboBoxJob.setGeometry(QtCore.QRect(joby, jobx, 130, 25))
-        self.comboBoxJob.setObjectName("comboBoxJob")
+        self.createjob.setGeometry(QtCore.QRect(joby + 260, jobx, 130, 25))
+        self.createjob.setObjectName("createjob")       
         #/
 
         #catagory: combo, name and button
         catagoryy = 230
         catagoryx = 100
+
         self.comboBox = QtWidgets.QComboBox(self.centralwidget)
         self.comboBox.setGeometry(QtCore.QRect(catagoryy, catagoryx, 130, 25))
         self.comboBox.setObjectName("comboBox")
@@ -112,8 +114,9 @@ class Ui_MainWindow(object):
                 print(self.job_list)
                 self.update_list()
                 #load combo box
-                for combo in self.job_list[0].categorie_list:
-                    self.comboBox.addItem(combo.name)
+                for combo.name in self.job_list(self.comboBoxJob.currentText()).categorie_list():
+                    if combo.name == self.comboBoxJob.currentText():
+                        self.comboBox.addItem(combo.name)
                 for combo in self.job_list:
                     self.comboBoxJob.addItem(combo.name)
 
@@ -149,7 +152,7 @@ class Ui_MainWindow(object):
         print("Adding Category")
         if self.lineCategoryName.text() != "":
             #self.job_list.append(categorie(self.lineCategoryName.text()))
-            self.job_list[0].categorie_list.append(categorie(self.lineCategoryName.text()))
+            self.job_list(self.comboboxjob.currenttext()).categorie_list().append(categorie(self.lineCategoryName.text()))
             self.comboBox.addItem(self.lineCategoryName.text())
             self.lineCategoryName.setText("")
             print(self.job_list)
@@ -166,10 +169,14 @@ class Ui_MainWindow(object):
 
     def changed_job(self):
         print(self.comboBoxJob.currentText())
+        for item in self.job_list:
+            if item.name == self.comboBoxJob.currentText():
+                
+
  
     def add_cost(self):
         print("add cost")
-        for item in self.job_list[0].categorie_list:
+        for item in self.job_list(self.comboboxjob.currenttext()).categorie_list():
             if item.name == self.comboBox.currentText():
                 item.add(self.doubleCost.value(), str(self.dateEdit.date()))
                 self.update_list()
@@ -177,7 +184,7 @@ class Ui_MainWindow(object):
 
     def add_payment(self):
         print("add paid")
-        for item in self.job_list[0].categorie_list:
+        for item in self.job_list(self.comboboxjob.currenttext()).categorie_list():
             if item.name == self.comboBox.currentText():
                 item.add_paid(self.doubleCost.value(), str(self.dateEdit.date()))
                 self.update_list()
@@ -186,7 +193,7 @@ class Ui_MainWindow(object):
     
     def update_list(self):
         self.listWidget.clear()
-        for item in self.job_list[0].categorie_list:
+        for item in self.job_list(self.comboboxjob.currenttext()).categorie_list():
             name = item.name
             self.listWidget.addItem(f"{name}\tCost: {item.total()}\tPaid: {item.total_paid()}\tOwe: {item.total() - item.total_paid()}")
         self.update_profit()
@@ -194,7 +201,7 @@ class Ui_MainWindow(object):
         self.update_data()
 
     def valuechange(self):
-        print(f"value: {self.projectValue.value()}")
+        print(f"value: {self.projectValue.value()}------")
         self.job_list[0].value = self.projectValue.value()
         self.update_data()
 
@@ -205,7 +212,7 @@ class Ui_MainWindow(object):
 
     def update_paid_amount_to_you(self):
         total_cost = 0
-        for item in self.job_list[0].categorie_list:
+        for item in self.job_list(self.comboboxjob.currenttext()).categorie_list():
             total_cost += item.total()
 
         self.paid_amount_to_you.setText(f"{self.projectValue.value()} ")
@@ -214,7 +221,7 @@ class Ui_MainWindow(object):
 
     def update_profit(self):
         total_cost = 0
-        for item in self.job_list[0].categorie_list:
+        for item in self.job_list(self.comboboxjob.currenttext()).categorie_list():
             total_cost += item.total()
 
         self.profit.setText(f"{self.projectValue.value() - total_cost} ")
