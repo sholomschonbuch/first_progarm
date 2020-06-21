@@ -171,6 +171,7 @@ class Ui_MainWindow(object):
         print(self.comboBoxJob.currentText())
         for item in self.job_list:
             if item.name == self.comboBoxJob.currentText():
+                pass
                 
 
  
@@ -190,12 +191,14 @@ class Ui_MainWindow(object):
                 self.update_list()
 
 
-    
+    #redo everything like this
     def update_list(self):
         self.listWidget.clear()
-        for item in self.job_list(self.comboboxjob.currenttext()).categorie_list():
-            name = item.name
-            self.listWidget.addItem(f"{name}\tCost: {item.total()}\tPaid: {item.total_paid()}\tOwe: {item.total() - item.total_paid()}")
+        for job in self.job_list:
+            if job.name == self.comboBoxJob.currentText():
+                for item in job.categorie_list():
+                    name = item.name
+                    self.listWidget.addItem(f"{name}\tCost: {item.total()}\tPaid: {item.total_paid()}\tOwe: {item.total() - item.total_paid()}")
         self.update_profit()
         self.update_paid_amount_to_you()
         self.update_data()
