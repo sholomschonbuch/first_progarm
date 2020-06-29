@@ -64,7 +64,12 @@ class Ui_MainWindow(object):
 
         self.createjob = QtWidgets.QPushButton(self.centralwidget)
         self.createjob.setGeometry(QtCore.QRect(joby + 260, jobx, 130, 25))
-        self.createjob.setObjectName("createjob")       
+        self.createjob.setObjectName("createjob")
+
+        self.removejob = QtWidgets.QPushButton(self.centralwidget)
+        self.removejob.setGeometry(QtCore.QRect(joby + 260 + 150, jobx, 130, 25))
+        self.removejob.setObjectName("removejob")   
+
         #/
 
         #catagory: combo, name and button
@@ -123,6 +128,7 @@ class Ui_MainWindow(object):
 
         self.createCategory.clicked.connect(self.add_category)
         self.createjob.clicked.connect(self.add_job)
+        self.removejob.clicked.connect(self.remove_job)
         self.addCategory.clicked.connect(self.add_cost)
         self.addPayment.clicked.connect(self.add_payment)
         self.projectValue.valueChanged.connect(self.valuechange)
@@ -143,6 +149,7 @@ class Ui_MainWindow(object):
         self.addPayment.setText(_translate("MainWindow", "Add Payment"))
         self.createCategory.setText(_translate("MainWindow", "Create Category"))
         self.createjob.setText(_translate("MainWindow", "add job"))
+        self.removejob.setText(_translate("MainWindow", "remove job"))
         self.profit.setText(_translate("MainWindow", "0"))
         #self.paid_amount_to_you.setText(_translate("MainWindow", "0"))
 
@@ -166,6 +173,18 @@ class Ui_MainWindow(object):
             self.lineJobName.setText("")
             print(self.job_list)
             self.update_data()
+
+    def remove_job(self):
+        for index, job in enumerate(self.job_list):
+            if job.name == self.comboBoxJob.currentText():
+                print(f"Job to remove: {job.name}, {index}")
+                self.job_list.pop(index)
+
+                self.comboBoxJob.clear()
+                for job in self.job_list:
+                    self.comboBoxJob.addItem(job.name)
+
+                self.update_list()
 
     def changed_job(self):
         print(self.comboBoxJob.currentText())
@@ -192,18 +211,20 @@ class Ui_MainWindow(object):
 
     #redo everything like this
     def update_list(self):
+
         self.listWidget.clear()
+        self.comboBox.clear()
+
         for job in self.job_list:
             if job.name == self.comboBoxJob.currentText():
                 for item in job.categorie_list:
                     name = item.name
                     self.listWidget.addItem(f"{name}\tCost: {item.total()}\tPaid: {item.total_paid()}\tOwe: {item.total() - item.total_paid()}")
         
-        self.comboBox.clear()
         for job in self.job_list:
-                    if job.name == self.comboBoxJob.currentText():
-                        for item in job.categorie_list:
-                            self.comboBox.addItem(item.name)
+            if job.name == self.comboBoxJob.currentText():
+                for item in job.categorie_list:
+                    self.comboBox.addItem(item.name)
         
         self.update_profit()
         self.update_paid_amount_to_you()
