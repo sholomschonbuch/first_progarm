@@ -203,10 +203,12 @@ class Ui_MainWindow(object):
 
     def add_payment(self):
         print("add paid")
-        for item in self.job_list(self.comboboxjob.currenttext()).categorie_list():
-            if item.name == self.comboBox.currentText():
-                item.add_paid(self.doubleCost.value(), str(self.dateEdit.date()))
-                self.update_list()
+        for job in self.job_list:
+            if job.name == self.comboBoxJob.currentText():
+                for item in job.categorie_list:
+                    if item.name == self.comboBox.currentText():
+                        item.add_paid(self.doubleCost.value(), str(self.dateEdit.date()))
+                        self.update_list()
 
 
     #redo everything like this
