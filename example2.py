@@ -65,11 +65,16 @@ class Ui_MainWindow(object):
         self.createjob = QtWidgets.QPushButton(self.centralwidget)
         self.createjob.setGeometry(QtCore.QRect(joby + 260, jobx, 130, 25))
         self.createjob.setObjectName("createjob")
+        #/
+
+        # Remove buttons
+        self.removecatagory = QtWidgets.QPushButton(self.centralwidget)
+        self.removecatagory.setGeometry(QtCore.QRect(joby + 260 + 150, jobx + 50, 130, 25))
+        self.removecatagory.setObjectName("removecatagory")   
 
         self.removejob = QtWidgets.QPushButton(self.centralwidget)
         self.removejob.setGeometry(QtCore.QRect(joby + 260 + 150, jobx, 130, 25))
         self.removejob.setObjectName("removejob")   
-
         #/
 
         #catagory: combo, name and button
@@ -129,6 +134,7 @@ class Ui_MainWindow(object):
         self.createCategory.clicked.connect(self.add_category)
         self.createjob.clicked.connect(self.add_job)
         self.removejob.clicked.connect(self.remove_job)
+        self.removecatagory.clicked.connect(self.remove_catagory)
         self.addCategory.clicked.connect(self.add_cost)
         self.addPayment.clicked.connect(self.add_payment)
         self.projectValue.valueChanged.connect(self.valuechange)
@@ -150,8 +156,9 @@ class Ui_MainWindow(object):
         self.createCategory.setText(_translate("MainWindow", "Create Category"))
         self.createjob.setText(_translate("MainWindow", "add job"))
         self.removejob.setText(_translate("MainWindow", "remove job"))
+        self.removecatagory.setText(_translate("MainWindow", "remove catagory"))
         self.profit.setText(_translate("MainWindow", "0"))
-        #self.paid_amount_to_you.setText(_translate("MainWindow", "0"))
+
 
     def add_category(self):
         print("Adding Category")
@@ -174,6 +181,18 @@ class Ui_MainWindow(object):
             print(self.job_list)
             self.update_data()
 
+    def remove_catagory(self):
+        print("removing job")
+        for job in self.job_list:
+            if job.name == self.comboBoxJob.currentText():
+                for index, catagory in job.catagorie_list:
+                    if catagory.name == self.comboBox.currentText():
+                        print(f"catagory to remove: {catagory.name}, {index}")
+                        self.job_list.catagorie_list.pop(index)
+                        
+
+
+
     def remove_job(self):
         for index, job in enumerate(self.job_list):
             if job.name == self.comboBoxJob.currentText():
@@ -185,6 +204,7 @@ class Ui_MainWindow(object):
                     self.comboBoxJob.addItem(job.name)
 
                 self.update_list()
+
 
     def changed_job(self):
         print(self.comboBoxJob.currentText())
@@ -273,7 +293,7 @@ if __name__ == "__main__":
             background: #0577a8;
             padding: 5px 5px;
             border: 1px #f00 solid;
-            font-weight: bold;           
+            font-weight: bold;
         }
         QPushButton#addPayment{
             background: #f00;
