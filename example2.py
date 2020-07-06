@@ -130,6 +130,8 @@ class Ui_MainWindow(object):
                         for item in job.categorie_list:
                             self.comboBox.addItem(item.name)
                 self.update_list()
+        else: 
+            self.job_list = []
 
         self.createCategory.clicked.connect(self.add_category)
         self.createjob.clicked.connect(self.add_job)
@@ -141,7 +143,7 @@ class Ui_MainWindow(object):
         self.profit.setText("0")
         self.paid_amount_to_you.setText("0")
         self.comboBoxJob.currentTextChanged.connect(self.changed_job)
-        self.projectValue.setValue(self.job_list[0].value)
+        self.projectValue.setValue(0)
         self.comboBox.addItem(self.lineCategoryName.text())
         self.comboBoxJob.addItem(self.lineJobName.text())
         
@@ -185,10 +187,13 @@ class Ui_MainWindow(object):
         print("removing job")
         for job in self.job_list:
             if job.name == self.comboBoxJob.currentText():
-                for index, catagory in job.catagorie_list:
+                print(job.name)
+                for index, catagory in enumerate(job.categorie_list):
                     if catagory.name == self.comboBox.currentText():
                         print(f"catagory to remove: {catagory.name}, {index}")
-                        self.job_list.catagorie_list.pop(index)
+                        job.categorie_list.pop(index)
+
+                        self.update_list()
                         
 
 
@@ -251,6 +256,7 @@ class Ui_MainWindow(object):
         self.update_profit()
         self.update_paid_amount_to_you()
         self.update_data()
+        
 
     def valuechange(self):
         print(f"value: {self.projectValue.value()}------")
