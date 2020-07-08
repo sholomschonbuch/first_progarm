@@ -8,7 +8,7 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from classes import categorie, job
+from classes import job, categorie
 
 import pickle 
 import os.path
