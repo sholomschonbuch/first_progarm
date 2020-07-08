@@ -63,7 +63,8 @@ class Ui_MainWindow(object):
         self.view["detail"].append(self.paid_amount_to_you)
         
     #/
-    #job: combo, name, add button and remove button
+
+    #job: combo, name, name label add button and remove button
         jobx = 50
         joby = 230
 
@@ -76,6 +77,11 @@ class Ui_MainWindow(object):
         self.lineJobName.setGeometry(QtCore.QRect(joby + 130, jobx, 130, 25))
         self.lineJobName.setObjectName("lineJobName")
         self.view["main"].append(self.lineJobName)
+
+        self.job_name = QtWidgets.QLabel(self.centralwidget)
+        self.job_name.setGeometry(QtCore.QRect(50, 50, 261, 16))
+        self.job_name.setObjectName("job_name")
+        self.view["detail"].append(self.job_name)
 
         self.createjob = QtWidgets.QPushButton(self.centralwidget)
         self.createjob.setGeometry(QtCore.QRect(joby + 260, jobx, 130, 25))
@@ -197,8 +203,17 @@ class Ui_MainWindow(object):
         for item in self.view["detail"]:
             item.setHidden(True)
 
+    def add_job(self):
+            print("Adding Job")
+            if self.lineJobName.text() != "":
+                self.job_list.append(job(self.lineJobName.text(), self.projectValue.value()))
+                self.comboBoxJob.addItem(self.lineJobName.text())
+                self.lineJobName.setText("")
+                print(self.job_list)
+                self.update_data()
 
 
+    
     def add_category(self):
         print("Adding Category")
         if self.lineCategoryName.text() != "":
@@ -211,14 +226,7 @@ class Ui_MainWindow(object):
                     print(self.job_list)
                     self.update_list()
 
-    def add_job(self):
-        print("Adding Job")
-        if self.lineJobName.text() != "":
-            self.job_list.append(job(self.lineJobName.text(), self.projectValue.value()))
-            self.comboBoxJob.addItem(self.lineJobName.text())
-            self.lineJobName.setText("")
-            print(self.job_list)
-            self.update_data()
+
 
     def remove_catagory(self):
         print("removing job")
@@ -252,7 +260,7 @@ class Ui_MainWindow(object):
 
         print(self.comboBoxJob.currentText())        
         self.update_list()
-        self.hide_main
+        self.hide_main()
         
 
  
