@@ -50,7 +50,7 @@ class Ui_MainWindow(object):
         self.view["detail"].append(self.doubleCost)
         #project value: spin and label
         paidx = 10
-        paidy = 500
+        paidy = 500 
         self.projectValue = QtWidgets.QDoubleSpinBox(self.centralwidget)
         self.projectValue.setGeometry(QtCore.QRect(paidy, paidx, 130, 25))
         self.projectValue.setMaximum(1000000.0)
@@ -120,7 +120,11 @@ class Ui_MainWindow(object):
         self.removecatagory.setObjectName("removecatagory")
         self.view["detail"].append(self.removecatagory)
         #/
-
+        #back button
+        self.backbutton = QtWidgets.QPushButton(self.centralwidget)
+        self.backbutton.setGeometry(QtCore.QRect(500, 500, 130, 25))
+        self.backbutton.setObjectName("backbutton")
+        self.view["detail"].append(self.backbutton)
         
         
         self.profit = QtWidgets.QLabel(self.centralwidget)
@@ -171,8 +175,10 @@ class Ui_MainWindow(object):
         self.projectValue.valueChanged.connect(self.valuechange)
         self.profit.setText("0")
         self.paid_amount_to_you.setText("0")
+        self.job_name.setText("job name")
         self.comboBoxJob.currentTextChanged.connect(self.changed_job)
         self.projectValue.setValue(0)
+        self.backbutton.clicked.connect(self.hide_detail)
         self.comboBox.addItem(self.lineCategoryName.text())
         self.comboBoxJob.addItem(self.lineJobName.text())
         
@@ -187,6 +193,7 @@ class Ui_MainWindow(object):
         self.createCategory.setText(_translate("MainWindow", "Create Category"))
         self.createjob.setText(_translate("MainWindow", "add job"))
         self.removejob.setText(_translate("MainWindow", "remove job"))
+        self.backbutton.setText(_translate("MainWindow", "Back"))
         self.removecatagory.setText(_translate("MainWindow", "remove catagory"))
         self.profit.setText(_translate("MainWindow", "0"))
 
