@@ -79,7 +79,7 @@ class Ui_MainWindow(object):
         self.view["main"].append(self.lineJobName)
 
         self.job_name = QtWidgets.QLabel(self.centralwidget)
-        self.job_name.setGeometry(QtCore.QRect(50, 50, 261, 16))
+        self.job_name.setGeometry(QtCore.QRect(50, 50, 130, 16))
         self.job_name.setObjectName("job_name")
         self.view["detail"].append(self.job_name)
 
@@ -120,11 +120,7 @@ class Ui_MainWindow(object):
         self.removecatagory.setObjectName("removecatagory")
         self.view["detail"].append(self.removecatagory)
         #/
-        #back button
-        self.backbutton = QtWidgets.QPushButton(self.centralwidget)
-        self.backbutton.setGeometry(QtCore.QRect(500, 500, 130, 25))
-        self.backbutton.setObjectName("backbutton")
-        self.view["detail"].append(self.backbutton)
+
         
         
         self.profit = QtWidgets.QLabel(self.centralwidget)
@@ -148,7 +144,15 @@ class Ui_MainWindow(object):
         self.addPayment.setObjectName("addPayment")
         self.view["detail"].append(self.addPayment)
 
-
+        self.backbutton = QtWidgets.QPushButton(self.centralwidget)
+        self.backbutton.setGeometry(QtCore.QRect(500, 500, 100, 23))
+        self.backbutton.setObjectName("backbutton")
+        self.view["detail"].append(self.backbutton)
+        #first job button
+        self.jobbutton = QtWidgets.QPushButton(self.centralwidget)
+        self.jobbutton.setGeometry(QtCore.QRect(100, 500, 100, 100))
+        self.jobbutton.setObjectName("jobbutton")
+        self.view["main"]
         #added Itmes
         
         if os.path.isfile("catagories.data"):
@@ -177,10 +181,13 @@ class Ui_MainWindow(object):
         self.paid_amount_to_you.setText("0")
         self.job_name.setText("job name")
         self.comboBoxJob.currentTextChanged.connect(self.changed_job)
-        self.projectValue.setValue(0)
+        self.jobbutton.clicked.connect(self.hide_main)
+        
+        self.backbutton.setText("Back")
         self.backbutton.clicked.connect(self.hide_detail)
         self.comboBox.addItem(self.lineCategoryName.text())
         self.comboBoxJob.addItem(self.lineJobName.text())
+        self.hide_detail()
         
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
@@ -193,7 +200,6 @@ class Ui_MainWindow(object):
         self.createCategory.setText(_translate("MainWindow", "Create Category"))
         self.createjob.setText(_translate("MainWindow", "add job"))
         self.removejob.setText(_translate("MainWindow", "remove job"))
-        self.backbutton.setText(_translate("MainWindow", "Back"))
         self.removecatagory.setText(_translate("MainWindow", "remove catagory"))
         self.profit.setText(_translate("MainWindow", "0"))
 
@@ -202,6 +208,8 @@ class Ui_MainWindow(object):
             item.setHidden(True)
         for item in self.view["detail"]:
             item.setHidden(False)
+        self.job_name.setText(self.comboBoxJob.currentText())
+        print("hide main")
 
     
     def hide_detail(self):
@@ -209,6 +217,8 @@ class Ui_MainWindow(object):
             item.setHidden(False)
         for item in self.view["detail"]:
             item.setHidden(True)
+        print("hide detail")
+        self.jobbutton.setText(f"{self.job_list[0].name}\n{self.job_list[0].value}")
 
     def add_job(self):
             print("Adding Job")
@@ -268,6 +278,7 @@ class Ui_MainWindow(object):
         print(self.comboBoxJob.currentText())        
         self.update_list()
         self.hide_main()
+        print("changedjob")
         
 
  
@@ -305,8 +316,10 @@ class Ui_MainWindow(object):
         
         for job in self.job_list:
             if job.name == self.comboBoxJob.currentText():
+                self.projectValue.setValue(job.value) 
                 for item in job.categorie_list:
                     self.comboBox.addItem(item.name)
+        
         
         self.update_profit()
         self.update_paid_amount_to_you()
@@ -315,7 +328,9 @@ class Ui_MainWindow(object):
 
     def valuechange(self):
         print(f"value: {self.projectValue.value()}------")
-        self.job_list[0].value = self.projectValue.value()
+        for job in self.job_list:
+            if job.name == self.comboBoxJob.currentText():
+                job.value = self.projectValue.value()
         self.update_data()
 
     def update_data(self):
