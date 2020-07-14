@@ -218,7 +218,12 @@ class Ui_MainWindow(object):
         for item in self.view["detail"]:
             item.setHidden(True)
         print("hide detail")
-        self.jobbutton.setText(f"{self.job_list[0].name}\n{self.job_list[0].value}")
+        if len(self.job_list) > 0:
+            self.jobbutton.setText(f"{self.job_list[0 ].name}\n{self.job_list[0].value}")
+        else:
+            print("not enough jobs!")
+            self.hide_detail
+        
 
     def add_job(self):
             print("Adding Job")
