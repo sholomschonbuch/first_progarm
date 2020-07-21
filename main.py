@@ -170,10 +170,9 @@ class Ui_MainWindow(object):
                 #load combo box
                 for combo in self.job_list:
                     self.comboBoxJob.addItem(combo.name)
-                for job in self.job_list:
-                    if job.name == self.comboBoxJob.currentText():
-                        for item in job.categorie_list:
-                            self.comboBox.addItem(item.name)
+                
+                for item in self.job_list[self.job_index].categorie_list:
+                    self.comboBox.addItem(item.name)
                 self.update_list()
         else: 
             self.job_list = []
@@ -265,16 +264,15 @@ class Ui_MainWindow(object):
 
     def remove_catagory(self):
         print("removing job")
-        for job in self.job_list:
-            if job.name == self.comboBoxJob.currentText():
-                print(job.name)
-                for index, catagory in enumerate(job.categorie_list):
-                    if catagory.name == self.comboBox.currentText():
-                        print(f"catagory to remove: {catagory.name}, {index}")
-                        job.categorie_list.pop(index)
 
-                        self.update_list()
-                        
+        print(self.job_list[self.job_index].name)
+        for index, catagory in enumerate(self.job_list[self.job_index].categorie_list):
+            if catagory.name == self.comboBox.currentText():
+                print(f"catagory to remove: {catagory.name}, {index}")
+                self.job_list[self.job_index].categorie_list.pop(index)
+
+                self.update_list()
+                
 
 
 
@@ -285,8 +283,7 @@ class Ui_MainWindow(object):
                 self.job_list.pop(index)
 
                 self.comboBoxJob.clear()
-                for job in self.job_list:
-                    self.comboBoxJob.addItem(job.name)
+                self.comboBoxJob.addItem(self.job_list[self.job_index].name)
 
                 self.update_list()
 
@@ -302,22 +299,19 @@ class Ui_MainWindow(object):
  
     def add_cost(self):
         print("add cost")
-        for job in self.job_list:
-            if job.name == self.comboBoxJob.currentText():
-                for item in job.categorie_list:
-                    if item.name == self.comboBox.currentText():
-                        item.add(self.doubleCost.value(), str(self.dateEdit.date()))
-                        self.update_list()
+
+        for item in self.job_list[self.job_index].categorie_list:
+            if item.name == self.comboBox.currentText():
+                item.add(self.doubleCost.value(), str(self.dateEdit.date()))
+                self.update_list()
 
 
     def add_payment(self):
         print("add paid")
-        for job in self.job_list:
-            if job.name == self.comboBoxJob.currentText():
-                for item in job.categorie_list:
-                    if item.name == self.comboBox.currentText():
-                        item.add_paid(self.doubleCost.value(), str(self.dateEdit.date()))
-                        self.update_list()
+        for item in self.job_list[self.job_index].categorie_list:
+            if item.name == self.comboBox.currentText():
+                item.add_paid(self.doubleCost.value(), str(self.dateEdit.date()))
+                self.update_list()
 
 
     #redo everything like this
@@ -340,9 +334,8 @@ class Ui_MainWindow(object):
 
     def valuechange(self):
         print(f"value: {self.projectValue.value()}------")
-        for job in self.job_list:
-            if job.name == self.comboBoxJob.currentText():
-                job.value = self.projectValue.value()
+        
+        self.job_list[self.job_index].value = self.projectValue.value()
         self.update_data()
 
     def update_data(self):
@@ -352,20 +345,17 @@ class Ui_MainWindow(object):
 
     def update_paid_amount_to_you(self):
         total_cost = 0
-        for job in self.job_list:
-            if job.name == self.comboBoxJob.currentText():
-                for item in job.categorie_list:
-                    total_cost += item.total()
+        for item in self.job_list[self.job_index].categorie_list:
+            total_cost += item.total()
 
         self.paid_amount_to_you.setText(f"{self.projectValue.value()} ")
 
 
     def update_profit(self):
         total_cost = 0
-        for job in self.job_list:
-            if job.name == self.comboBoxJob.currentText():
-                for item in job.categorie_list:
-                    total_cost += item.total()
+
+        for item in self.job_list[self.job_index].categorie_list:
+            total_cost += item.total()
 
         self.profit.setText(f"{self.projectValue.value() - total_cost} ")
 
