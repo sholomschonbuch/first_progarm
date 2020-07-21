@@ -149,11 +149,19 @@ class Ui_MainWindow(object):
         self.backbutton.setObjectName("backbutton")
         self.view["detail"].append(self.backbutton)
         #first job button
+        self.job_index = 0
+
         self.jobbutton = QtWidgets.QPushButton(self.centralwidget)
         self.jobbutton.setGeometry(QtCore.QRect(100, 500, 100, 100))
         self.jobbutton.setObjectName("jobbutton")
-        self.view["main"]
-        #added Itmes
+        self.view["main"].append(self.jobbutton)
+        self.jobbutton.clicked.connect(lambda: self.hide_main(0))
+
+        self.jobbutton2 = QtWidgets.QPushButton(self.centralwidget)
+        self.jobbutton2.setGeometry(QtCore.QRect(210, 500, 100, 100))
+        self.jobbutton2.setObjectName("jobbutton2")
+        self.view["main"].append(self.jobbutton2)
+        self.jobbutton2.clicked.connect(lambda: self.hide_main(1))
         
         if os.path.isfile("catagories.data"):
             with open("catagories.data", "rb") as load:
@@ -181,7 +189,9 @@ class Ui_MainWindow(object):
         self.paid_amount_to_you.setText("0")
         self.job_name.setText("job name")
         self.comboBoxJob.currentTextChanged.connect(self.changed_job)
-        self.jobbutton.clicked.connect(self.hide_main)
+        
+        
+
         
         self.backbutton.setText("Back")
         self.backbutton.clicked.connect(self.hide_detail)
@@ -203,12 +213,14 @@ class Ui_MainWindow(object):
         self.removecatagory.setText(_translate("MainWindow", "remove catagory"))
         self.profit.setText(_translate("MainWindow", "0"))
 
-    def hide_main(self):
+    def hide_main(self, jobindex):
         for item in self.view["main"]:
             item.setHidden(True)
         for item in self.view["detail"]:
             item.setHidden(False)
-        self.job_name.setText(self.comboBoxJob.currentText())
+        self.job_index = jobindex
+        self.job_name.setText(self.job_list[jobindex].name)
+        self.update_list()
         print("hide main")
 
     
@@ -219,7 +231,8 @@ class Ui_MainWindow(object):
             item.setHidden(True)
         print("hide detail")
         if len(self.job_list) > 0:
-            self.jobbutton.setText(f"{self.job_list[0 ].name}\n{self.job_list[0].value}")
+            self.jobbutton.setText(f"{self.job_list[0].name}\n{self.job_list[0].value}")
+            self.jobbutton2.setText(f"{self.job_list[1].name}\n{self.job_list[1].value}")
         else:
             print("not enough jobs!")
             self.hide_detail
@@ -313,17 +326,11 @@ class Ui_MainWindow(object):
         self.listWidget.clear()
         self.comboBox.clear()
 
-        for job in self.job_list:
-            if job.name == self.comboBoxJob.currentText():
-                for item in job.categorie_list:
-                    name = item.name
-                    self.listWidget.addItem(f"{name}\tCost: {item.total()}\tPaid: {item.total_paid()}\tOwe: {item.total() - item.total_paid()}")
-        
-        for job in self.job_list:
-            if job.name == self.comboBoxJob.currentText():
-                self.projectValue.setValue(job.value) 
-                for item in job.categorie_list:
-                    self.comboBox.addItem(item.name)
+        self.projectValue.setValue(self.job_list[self.job_index].value) 
+        for item in self.job_list[self.job_index].categorie_list:
+            name = item.name
+            self.listWidget.addItem(f"{name}\tCost: {item.total()}\tPaid: {item.total_paid()}\tOwe: {item.total() - item.total_paid()}")
+            self.comboBox.addItem(item.name)
         
         
         self.update_profit()
