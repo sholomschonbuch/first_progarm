@@ -229,12 +229,23 @@ class Ui_MainWindow(object):
         for item in self.view["detail"]:
             item.setHidden(True)
         print("hide detail")
+        currentjob = 0
         if len(self.job_list) > 0:
+            
+                
             self.jobbutton.setText(f"{self.job_list[0].name}\n{self.job_list[0].value}")
+        if len(self.job_list) > 1:
+        
             self.jobbutton2.setText(f"{self.job_list[1].name}\n{self.job_list[1].value}")
-        else:
-            print("not enough jobs!")
-            self.hide_detail
+                 
+        
+        #if len(self.job_list) < 1:
+            #self.jobbutton.setText(f"{self.job_list[0].name}\n{self.job_list[0].value}")
+            #self.jobbutton2.setText(f"{self.job_list[1].name}\n{self.job_list[1].value}")
+        #else:
+            #self.jobbutton.setText(f"{self.job_list[0].name}\n{self.job_list[0].value}")
+            #print("not enough jobs!")
+            #self.hide_detail
         
 
     def add_job(self):
@@ -292,7 +303,7 @@ class Ui_MainWindow(object):
 
         print(self.comboBoxJob.currentText())        
         self.update_list()
-        self.hide_main()
+        self.hide_main(self.job_index)
         print("changedjob")
         
 
@@ -319,8 +330,10 @@ class Ui_MainWindow(object):
 
         self.listWidget.clear()
         self.comboBox.clear()
-
-        self.projectValue.setValue(self.job_list[self.job_index].value) 
+        if len(self.job_list) == 0:
+            print("not enough jobs!")
+        else:
+            self.projectValue.setValue(self.job_list[self.job_index].value) 
         for item in self.job_list[self.job_index].categorie_list:
             name = item.name
             self.listWidget.addItem(f"{name}\tCost: {item.total()}\tPaid: {item.total_paid()}\tOwe: {item.total() - item.total_paid()}")
