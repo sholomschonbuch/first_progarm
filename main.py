@@ -21,7 +21,9 @@ class Ui_MainWindow(object):
         MainWindow.resize(800, 600)
         self.view = {
             "main": [],
+            "addjobpage": [],
             "detail": []
+            
         }
         
 
@@ -71,12 +73,12 @@ class Ui_MainWindow(object):
         self.comboBoxJob = QtWidgets.QComboBox(self.centralwidget)
         self.comboBoxJob.setGeometry(QtCore.QRect(joby, jobx, 130, 25))
         self.comboBoxJob.setObjectName("comboBoxJob")
-        self.view["main"].append(self.comboBoxJob)
+        self.view["addjobpage"].append(self.comboBoxJob)
 
         self.lineJobName = QtWidgets.QLineEdit(self.centralwidget)
         self.lineJobName.setGeometry(QtCore.QRect(joby + 130, jobx, 130, 25))
         self.lineJobName.setObjectName("lineJobName")
-        self.view["main"].append(self.lineJobName)
+        self.view["addjobpage"].append(self.lineJobName)
 
         self.job_name = QtWidgets.QLabel(self.centralwidget)
         self.job_name.setGeometry(QtCore.QRect(50, 50, 130, 16))
@@ -86,12 +88,13 @@ class Ui_MainWindow(object):
         self.createjob = QtWidgets.QPushButton(self.centralwidget)
         self.createjob.setGeometry(QtCore.QRect(joby + 260, jobx, 130, 25))
         self.createjob.setObjectName("createjob")
-        self.view["main"].append(self.createjob)
+        self.view["addjobpage"].append(self.createjob)
 
         self.removejob = QtWidgets.QPushButton(self.centralwidget)
         self.removejob.setGeometry(QtCore.QRect(joby + 260 + 150, jobx, 130, 25))
         self.removejob.setObjectName("removejob")   
         self.view["main"].append(self.removejob)
+        self.view["addjobpage"].append(self.removejob)
 
 
         #catagory: combo, name, add button and remove button
@@ -139,26 +142,44 @@ class Ui_MainWindow(object):
         MainWindow.setStatusBar(self.statusbar)
 
         #self made:
+        
         self.addPayment = QtWidgets.QPushButton(self.centralwidget)
         self.addPayment.setGeometry(QtCore.QRect(450, 200, 100, 23))
         self.addPayment.setObjectName("addPayment")
         self.view["detail"].append(self.addPayment)
 
         self.backbutton = QtWidgets.QPushButton(self.centralwidget)
-        self.backbutton.setGeometry(QtCore.QRect(500, 500, 100, 23))
+        self.backbutton.setGeometry(QtCore.QRect(500, 500,  100, 23))
         self.backbutton.setObjectName("backbutton")
+        
+        self.view["addjobpage"].append(self.backbutton)
         self.view["detail"].append(self.backbutton)
+
+        
+        
+
         #first job button
         self.job_index = 0
 
+        buttonsizex = 150
+        buttonsizey = buttonsizex 
+        buttonx = 100
+        buttony = 200
+
+        self.openjobpage = QtWidgets.QPushButton(self.centralwidget)
+        self.openjobpage.setGeometry(QtCore.QRect(buttonx + 400, buttony, buttonsizex, buttonsizey))
+        self.openjobpage.setObjectName("openjobpage")
+        self.view["main"].append(self.openjobpage)
+
+        
         self.jobbutton = QtWidgets.QPushButton(self.centralwidget)
-        self.jobbutton.setGeometry(QtCore.QRect(100, 500, 100, 100))
+        self.jobbutton.setGeometry(QtCore.QRect(buttonx, buttony, buttonsizex, buttonsizey))
         self.jobbutton.setObjectName("jobbutton")
         self.view["main"].append(self.jobbutton)
         self.jobbutton.clicked.connect(lambda: self.hide_main(0))
 
         self.jobbutton2 = QtWidgets.QPushButton(self.centralwidget)
-        self.jobbutton2.setGeometry(QtCore.QRect(210, 500, 100, 100))
+        self.jobbutton2.setGeometry(QtCore.QRect(buttonx + 200 , buttony, buttonsizex, buttonsizey))
         self.jobbutton2.setObjectName("jobbutton2")
         self.view["main"].append(self.jobbutton2)
         self.jobbutton2.clicked.connect(lambda: self.hide_main(1))
@@ -189,7 +210,8 @@ class Ui_MainWindow(object):
         self.job_name.setText("job name")
         self.comboBoxJob.currentTextChanged.connect(self.changed_job)
         
-        
+        self.openjobpage.setText("+")
+        self.openjobpage.clicked.connect(self.show_addjobpage)
 
         
         self.backbutton.setText("Back")
@@ -217,10 +239,34 @@ class Ui_MainWindow(object):
             item.setHidden(True)
         for item in self.view["detail"]:
             item.setHidden(False)
+        for item in self.view["addjobpage"]:
+            if item != self.backbutton:
+                item.setHidden(True)
         self.job_index = jobindex
         self.job_name.setText(self.job_list[jobindex].name)
         self.update_list()
         print("hide main")
+
+    def hide_addjobpage(self):
+        for item in self.view["main"]:
+            item.setHidden(False)
+        for item in self.view["detail"]:
+            item.setHidden(True)
+        for item in self.view["addjobpage"]:
+            if item != self.backbutton:
+                item.setHidden(True)
+        print("hide_addjobpage")
+
+    def show_addjobpage(self):
+        for item in self.view["main"]:
+            item.setHidden(True)
+        for item in self.view["detail"]:
+            item.setHidden(True)
+        for item in self.view["addjobpage"]:
+            item.setHidden(False)
+        print("show_addjobpage")
+
+
 
     
     def hide_detail(self):
@@ -228,6 +274,10 @@ class Ui_MainWindow(object):
             item.setHidden(False)
         for item in self.view["detail"]:
             item.setHidden(True)
+        for item in self.view["addjobpage"]:
+            item.setHidden(True)
+        print("hide detail")
+
         print("hide detail")
         currentjob = 0
         if len(self.job_list) > 0:
@@ -262,14 +312,13 @@ class Ui_MainWindow(object):
     def add_category(self):
         print("Adding Category")
         if self.lineCategoryName.text() != "":
-            for job in self.job_list:
-                if job.name == self.comboBoxJob.currentText():
-                    # self.comboBox.addItem(self.lineCategoryName.text())
-                    categorie_holder = categorie(self.lineCategoryName.text())
-                    job.categorie_list.append(categorie_holder)
-                    self.lineCategoryName.setText("")
-                    print(self.job_list)
-                    self.update_list()
+
+            # self.comboBox.addItem(self.lineCategoryName.text())
+            categorie_holder = categorie(self.lineCategoryName.text())
+            self.job_list[self.job_index].categorie_list.append(categorie_holder)
+            self.lineCategoryName.setText("")
+            print(self.job_list)
+            self.update_list()
 
 
 
@@ -285,18 +334,14 @@ class Ui_MainWindow(object):
                 self.update_list()
                 
 
-
-
     def remove_job(self):
-        for index, job in enumerate(self.job_list):
-            if job.name == self.comboBoxJob.currentText():
-                print(f"Job to remove: {job.name}, {index}")
-                self.job_list.pop(index)
+        self.job_list.pop(self.job_index)
+        self.comboBoxJob.clear()
+        self.comboBoxJob.addItem(self.job_list[self.job_index].name)
+        self.update_list()
 
-                self.comboBoxJob.clear()
-                self.comboBoxJob.addItem(self.job_list[self.job_index].name)
 
-                self.update_list()
+     
 
 
     def changed_job(self):
