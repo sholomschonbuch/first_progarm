@@ -94,7 +94,7 @@ class Ui_MainWindow(object):
         self.removejob.setGeometry(QtCore.QRect(joby + 260 + 150, jobx, 130, 25))
         self.removejob.setObjectName("removejob")   
         self.view["main"].append(self.removejob)
-        self.view["addjobpage"].append(self.removejob)
+        self.view["detail"].append(self.removejob)
 
 
         #catagory: combo, name, add button and remove button
@@ -240,7 +240,7 @@ class Ui_MainWindow(object):
         for item in self.view["detail"]:
             item.setHidden(False)
         for item in self.view["addjobpage"]:
-            if item != self.backbutton:
+            if item != self.removejob and self.backbutton:
                 item.setHidden(True)
         self.job_index = jobindex
         self.job_name.setText(self.job_list[jobindex].name)

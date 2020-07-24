@@ -4,6 +4,8 @@ class job:
         self.name = name
         self.value = value
         self.categorie_list = []
+    
+    
 
  
 class categorie:
