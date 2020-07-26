@@ -240,8 +240,9 @@ class Ui_MainWindow(object):
         for item in self.view["detail"]:
             item.setHidden(False)
         for item in self.view["addjobpage"]:
-            if item != self.removejob and self.backbutton:
-                item.setHidden(True)
+            if item != self.removejob:
+                if item != self.backbutton:
+                    item.setHidden(True)
         self.job_index = jobindex
         self.job_name.setText(self.job_list[jobindex].name)
         self.update_list()
@@ -278,11 +279,7 @@ class Ui_MainWindow(object):
             item.setHidden(True)
         print("hide detail")
 
-        print("hide detail")
-        currentjob = 0
         if len(self.job_list) > 0:
-            
-                
             self.jobbutton.setText(f"{self.job_list[0].name}\n{self.job_list[0].value}")
         if len(self.job_list) > 1:
         
