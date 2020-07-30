@@ -22,10 +22,24 @@ class Ui_MainWindow(object):
         self.view = {
             "main": [],
             "addjobpage": [],
-            "detail": []
+            "detail": [],
+            "jobbuttons": []
             
         }
-        
+        if os.path.isfile("catagories.data"):
+            with open("catagories.data", "rb") as load:
+                self.job_list = pickle.load(load)
+                print(self.job_list)
+                #load combo box
+    
+                #for combo in self.job_list:
+                    #self.comboBoxJob.addItem(combo.name)
+               
+                
+                #self.update_list()
+        else: 
+            self.job_list = []
+
 
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
@@ -167,37 +181,31 @@ class Ui_MainWindow(object):
         buttony = 200
 
         self.openjobpage = QtWidgets.QPushButton(self.centralwidget)
-        self.openjobpage.setGeometry(QtCore.QRect(buttonx + 400, buttony, buttonsizex, buttonsizey))
+        self.openjobpage.setGeometry(QtCore.QRect(buttonx + 400, buttony + 200, buttonsizex, buttonsizey))
         self.openjobpage.setObjectName("openjobpage")
         self.view["main"].append(self.openjobpage)
 
-        
-        self.jobbutton = QtWidgets.QPushButton(self.centralwidget)
-        self.jobbutton.setGeometry(QtCore.QRect(buttonx, buttony, buttonsizex, buttonsizey))
-        self.jobbutton.setObjectName("jobbutton")
-        self.view["main"].append(self.jobbutton)
-        self.jobbutton.clicked.connect(lambda: self.hide_main(0))
+        for i, job in enumerate(self.job_list):
+            self.view["jobbuttons"].append(QtWidgets.QPushButton(self.centralwidget))
+            self.view["jobbuttons"][i].setGeometry(QtCore.QRect(buttonx + (200 * i), buttony, buttonsizex, buttonsizey))
+            self.view["jobbuttons"][i].setObjectName(f"jobbutton{i}")
+            self.view["jobbuttons"][i].clicked.connect(lambda: self.hide_main(i))
+            
 
-        self.jobbutton2 = QtWidgets.QPushButton(self.centralwidget)
-        self.jobbutton2.setGeometry(QtCore.QRect(buttonx + 200 , buttony, buttonsizex, buttonsizey))
-        self.jobbutton2.setObjectName("jobbutton2")
-        self.view["main"].append(self.jobbutton2)
-        self.jobbutton2.clicked.connect(lambda: self.hide_main(1))
         
-        if os.path.isfile("catagories.data"):
-            with open("catagories.data", "rb") as load:
-                self.job_list = pickle.load(load)
-                print(self.job_list)
-                #load combo box
-                for combo in self.job_list:
-                    self.comboBoxJob.addItem(combo.name)
-                
-                for item in self.job_list[self.job_index].categorie_list:
-                    self.comboBox.addItem(item.name)
-                self.update_list()
-        else: 
-            self.job_list = []
+        # self.jobbutton2 = QtWidgets.QPushButton(self.centralwidget)
+        # self.jobbutton2.setGeometry(QtCore.QRect(buttonx + 200, buttony, buttonsizex, buttonsizey))
+        # self.jobbutton2.setObjectName("jobbutton2")
+        # self.view["main"].append(self.jobbutton2)
+        # self.jobbutton2.clicked.connect(lambda: self.hide_main(1))
 
+        # self.jobbutton3 = QtWidgets.QPushButton(self.centralwidget)
+        # self.jobbutton3.setGeometry(QtCore.QRect(buttonx + 400 , buttony, buttonsizex, buttonsizey))
+        # self.jobbutton3.setObjectName("jobbutton3")
+        # self.view["main"].append(self.jobbutton3)
+        # self.jobbutton3.clicked.connect(lambda: self.hide_main(2))
+        
+        
         self.createCategory.clicked.connect(self.add_category)
         self.createjob.clicked.connect(self.add_job)
         self.removejob.clicked.connect(self.remove_job)
@@ -208,7 +216,7 @@ class Ui_MainWindow(object):
         self.profit.setText("0")
         self.paid_amount_to_you.setText("0")
         self.job_name.setText("job name")
-        self.comboBoxJob.currentTextChanged.connect(self.changed_job)
+        #self.comboBoxJob.currentTextChanged.connect(self.changed_job)
         
         self.openjobpage.setText("+")
         self.openjobpage.clicked.connect(self.show_addjobpage)
@@ -241,7 +249,7 @@ class Ui_MainWindow(object):
             item.setHidden(False)
         for item in self.view["addjobpage"]:
             if item != self.removejob:
-                if item != self.backbutton:
+                if item != self.backbutton: 
                     item.setHidden(True)
         self.job_index = jobindex
         self.job_name.setText(self.job_list[jobindex].name)
@@ -267,11 +275,10 @@ class Ui_MainWindow(object):
             item.setHidden(False)
         print("show_addjobpage")
 
-
-
-    
     def hide_detail(self):
         for item in self.view["main"]:
+            item.setHidden(False)
+        for item in self.view["jobbuttons"]:
             item.setHidden(False)
         for item in self.view["detail"]:
             item.setHidden(True)
@@ -279,12 +286,15 @@ class Ui_MainWindow(object):
             item.setHidden(True)
         print("hide detail")
 
-        if len(self.job_list) > 0:
-            self.jobbutton.setText(f"{self.job_list[0].name}\n{self.job_list[0].value}")
-        if len(self.job_list) > 1:
-        
-            self.jobbutton2.setText(f"{self.job_list[1].name}\n{self.job_list[1].value}")
-                 
+        for i, jobbutton in enumerate(self.view["jobbuttons"]):
+            jobbutton.setText(f"{self.job_list[i].name}\n{self.job_list[i].value}")
+
+        # if len(self.job_list) > 0:
+        #     self.jobbutton.setText(f"{self.job_list[0].name}\n{self.job_list[0].value}")
+        # if len(self.job_list) > 1:
+        #     self.jobbutton2.setText(f"{self.job_list[1].name}\n{self.job_list[1].value}")
+        # if len(self.job_list) > 2:
+        #     self.jobbutton3.setText(f"{self.job_list[2].name}\n{self.job_list[2].value}")
         
         #if len(self.job_list) < 1:
             #self.jobbutton.setText(f"{self.job_list[0].name}\n{self.job_list[0].value}")
@@ -332,10 +342,16 @@ class Ui_MainWindow(object):
                 
 
     def remove_job(self):
+        print("removing job")
         self.job_list.pop(self.job_index)
         self.comboBoxJob.clear()
-        self.comboBoxJob.addItem(self.job_list[self.job_index].name)
-        self.update_list()
+        for job in self.job_list:
+            self.comboBoxJob.addItem(job.name)
+        self.hide_detail()
+        
+        #self.update_list()
+        self.update_data()
+        
 
 
      
@@ -375,7 +391,7 @@ class Ui_MainWindow(object):
         if len(self.job_list) == 0:
             print("not enough jobs!")
         else:
-            self.projectValue.setValue(self.job_list[self.job_index].value) 
+            self.projectValue.setValue(self.job_list[self.job_index].value)
         for item in self.job_list[self.job_index].categorie_list:
             name = item.name
             self.listWidget.addItem(f"{name}\tCost: {item.total()}\tPaid: {item.total_paid()}\tOwe: {item.total() - item.total_paid()}")
