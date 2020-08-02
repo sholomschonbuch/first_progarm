@@ -247,6 +247,8 @@ class Ui_MainWindow(object):
             item.setHidden(True)
         for item in self.view["detail"]:
             item.setHidden(False)
+        for item in self.view["jobbuttons"]:
+            item.setHidden(True)
         for item in self.view["addjobpage"]:
             if item != self.removejob:
                 if item != self.backbutton: 
@@ -271,6 +273,8 @@ class Ui_MainWindow(object):
             item.setHidden(True)
         for item in self.view["detail"]:
             item.setHidden(True)
+        for item in self.view["jobbuttons"]:
+            item.setHidden(True)
         for item in self.view["addjobpage"]:
             item.setHidden(False)
         print("show_addjobpage")
@@ -291,7 +295,7 @@ class Ui_MainWindow(object):
 
         # if len(self.job_list) > 0:
         #     self.jobbutton.setText(f"{self.job_list[0].name}\n{self.job_list[0].value}")
-        # if len(self.job_list) > 1:
+        # if len(self.job_list) > 1: 
         #     self.jobbutton2.setText(f"{self.job_list[1].name}\n{self.job_list[1].value}")
         # if len(self.job_list) > 2:
         #     self.jobbutton3.setText(f"{self.job_list[2].name}\n{self.job_list[2].value}")
@@ -398,8 +402,8 @@ class Ui_MainWindow(object):
             self.comboBox.addItem(item.name)
         
         
-        self.update_profit()
-        self.update_paid_amount_to_you()
+        #self.update_profit()
+        #self.update_paid_amount_to_you()
         self.update_data()
         
 
@@ -407,6 +411,8 @@ class Ui_MainWindow(object):
         print(f"value: {self.projectValue.value()}------")
         
         self.job_list[self.job_index].value = self.projectValue.value()
+        self.paid_amount_to_you.setText(f"{self.projectValue.value()}")
+        self.update_profit()
         self.update_data()
 
     def update_data(self):
