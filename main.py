@@ -60,7 +60,7 @@ class Ui_MainWindow(object):
         self.view["detail"].append(self.dateEdit)
 
         self.doubleCost = QtWidgets.QDoubleSpinBox(self.centralwidget)
-        self.doubleCost.setGeometry(QtCore.QRect(220, 190, 62, 22))
+        self.doubleCost.setGeometry(QtCore.QRect(220, 190, 62, 22)) 
         self.doubleCost.setMaximum(1000000.0)
         self.doubleCost.setObjectName("doubleCost")
         self.view["detail"].append(self.doubleCost)
@@ -189,7 +189,9 @@ class Ui_MainWindow(object):
             self.view["jobbuttons"].append(QtWidgets.QPushButton(self.centralwidget))
             self.view["jobbuttons"][i].setGeometry(QtCore.QRect(buttonx + (200 * i), buttony, buttonsizex, buttonsizey))
             self.view["jobbuttons"][i].setObjectName(f"jobbutton{i}")
+            print(f"{i}--")
             self.view["jobbuttons"][i].clicked.connect(lambda: self.hide_main(i))
+        
             
 
         
@@ -243,6 +245,8 @@ class Ui_MainWindow(object):
         self.profit.setText(_translate("MainWindow", "0"))
 
     def hide_main(self, jobindex):
+        print(jobindex)
+        print(self.job_index)
         for item in self.view["main"]:
             item.setHidden(True)
         for item in self.view["detail"]:
@@ -254,6 +258,7 @@ class Ui_MainWindow(object):
                 if item != self.backbutton: 
                     item.setHidden(True)
         self.job_index = jobindex
+
         self.job_name.setText(self.job_list[jobindex].name)
         self.update_list()
         print("hide main")
@@ -292,23 +297,9 @@ class Ui_MainWindow(object):
 
         for i, jobbutton in enumerate(self.view["jobbuttons"]):
             jobbutton.setText(f"{self.job_list[i].name}\n{self.job_list[i].value}")
+            jobbutton.clicked.connect(lambda: self.hide_main(i))
 
-        # if len(self.job_list) > 0:
-        #     self.jobbutton.setText(f"{self.job_list[0].name}\n{self.job_list[0].value}")
-        # if len(self.job_list) > 1: 
-        #     self.jobbutton2.setText(f"{self.job_list[1].name}\n{self.job_list[1].value}")
-        # if len(self.job_list) > 2:
-        #     self.jobbutton3.setText(f"{self.job_list[2].name}\n{self.job_list[2].value}")
-        
-        #if len(self.job_list) < 1:
-            #self.jobbutton.setText(f"{self.job_list[0].name}\n{self.job_list[0].value}")
-            #self.jobbutton2.setText(f"{self.job_list[1].name}\n{self.job_list[1].value}")
-        #else:
-            #self.jobbutton.setText(f"{self.job_list[0].name}\n{self.job_list[0].value}")
-            #print("not enough jobs!")
-            #self.hide_detail
-        
-
+ 
     def add_job(self):
             print("Adding Job")
             if self.lineJobName.text() != "":
