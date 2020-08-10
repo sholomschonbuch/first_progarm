@@ -24,8 +24,9 @@ class Ui_MainWindow(object):
             "addjobpage": [],
             "detail": [],
             "jobbuttons": []
-            
         }
+
+
         if os.path.isfile("catagories.data"):
             with open("catagories.data", "rb") as load:
                 self.job_list = pickle.load(load)
@@ -190,7 +191,7 @@ class Ui_MainWindow(object):
             self.view["jobbuttons"][i].setGeometry(QtCore.QRect(buttonx + (200 * i), buttony, buttonsizex, buttonsizey))
             self.view["jobbuttons"][i].setObjectName(f"jobbutton{i}")
             print(f"{i}--")
-            self.view["jobbuttons"][i].clicked.connect(lambda: self.hide_main(i))
+            self.view["jobbuttons"][i].clicked.connect(lambda checked, i=i: self.hide_main(i))
         
             
 
@@ -297,7 +298,7 @@ class Ui_MainWindow(object):
 
         for i, jobbutton in enumerate(self.view["jobbuttons"]):
             jobbutton.setText(f"{self.job_list[i].name}\n{self.job_list[i].value}")
-            jobbutton.clicked.connect(lambda: self.hide_main(i))
+            jobbutton.clicked.connect(lambda checked, i=i: self.hide_main(i))
 
  
     def add_job(self):
@@ -339,6 +340,7 @@ class Ui_MainWindow(object):
     def remove_job(self):
         print("removing job")
         self.job_list.pop(self.job_index)
+        self.view["jobbuttons"].pop(self.job_index)
         self.comboBoxJob.clear()
         for job in self.job_list:
             self.comboBoxJob.addItem(job.name)
