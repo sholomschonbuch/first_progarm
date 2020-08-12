@@ -176,23 +176,21 @@ class Ui_MainWindow(object):
         #first job button
         self.job_index = 0
 
-        buttonsizex = 150
-        buttonsizey = buttonsizex 
-        buttonx = 100
-        buttony = 200
-
+        self.buttonsizex = 150
+        self.buttonsizey = self.buttonsizex 
+        self.buttonx = 100
+        self.buttony = 75
+        
         self.openjobpage = QtWidgets.QPushButton(self.centralwidget)
-        self.openjobpage.setGeometry(QtCore.QRect(buttonx + 400, buttony + 200, buttonsizex, buttonsizey))
+        self.openjobpage.setGeometry(QtCore.QRect(self.buttonx + 225, self.buttony + 400, self.buttonsizex - 50, self.buttonsizey - 75))
+        self.openjobpage.setStyleSheet(f"border-radius : 35; border :2px solid black")
         self.openjobpage.setObjectName("openjobpage")
         self.view["main"].append(self.openjobpage)
 
-        for i, job in enumerate(self.job_list):
-            self.view["jobbuttons"].append(QtWidgets.QPushButton(self.centralwidget))
-            self.view["jobbuttons"][i].setGeometry(QtCore.QRect(buttonx + (200 * i), buttony, buttonsizex, buttonsizey))
-            self.view["jobbuttons"][i].setObjectName(f"jobbutton{i}")
-            print(f"{i}--")
-            self.view["jobbuttons"][i].clicked.connect(lambda checked, i=i: self.hide_main(i))
         
+  
+        #loading buttons-------------------------------------------------:
+        self.load_buttons()
             
 
         
@@ -296,15 +294,15 @@ class Ui_MainWindow(object):
             item.setHidden(True)
         print("hide detail")
 
-        for i, jobbutton in enumerate(self.view["jobbuttons"]):
-            jobbutton.setText(f"{self.job_list[i].name}\n{self.job_list[i].value}")
-            jobbutton.clicked.connect(lambda checked, i=i: self.hide_main(i))
+        self.load_buttons()
+
+        
 
  
     def add_job(self):
             print("Adding Job")
             if self.lineJobName.text() != "":
-                self.job_list.append(job(self.lineJobName.text(), self.projectValue.value()))
+                self.job_list.append(job(self.lineJobName.text()))
                 self.comboBoxJob.addItem(self.lineJobName.text())
                 self.lineJobName.setText("")
                 print(self.job_list)
@@ -379,7 +377,28 @@ class Ui_MainWindow(object):
                 item.add_paid(self.doubleCost.value(), str(self.dateEdit.date()))
                 self.update_list()
 
+    def load_buttons(self):
+        x = 0
+        y = 0
+        for i, job in enumerate(self.job_list):
+            if i == 3:
+                y = 200
+                x = 0
+            self.view["jobbuttons"].append(QtWidgets.QPushButton(self.centralwidget))
+            self.view["jobbuttons"][i].setGeometry(QtCore.QRect(self.buttonx + x, self.buttony + y, self.buttonsizex, self.buttonsizey))
+            self.view["jobbuttons"][i].setText(f"{self.job_list[i].name}\n{self.job_list[i].value}")
+            self.view["jobbuttons"][i].setObjectName(f"jobbutton{i}")
+            x += 200
+            self.view["jobbuttons"][i].clicked.connect(lambda checked, i=i: self.hide_main(i))
 
+        
+        # for i, jobbutton in enumerate(self.view["jobbuttons"]):
+        #     jobbutton.setText(f"{self.job_list[i].name}\n{self.job_list[i].value}")
+        #     jobbutton.clicked.connect(lambda checked, i=i: self.hide_main(i))
+        
+        
+      
+        
     #redo everything like this
     def update_list(self):
 
@@ -439,14 +458,17 @@ if __name__ == "__main__":
         }
         QPushButton{
             background: #0577a8;
-            padding: 5px 5px;
-            border: 1px #f00 solid;
+            padding: 2px 2px;
+            border: 2px solid grey;
             font-weight: bold;
         }
         QPushButton#addPayment{
             background: #f00;
         }
         QPushButton:hover{
+            background: #0f0;
+        }
+        QPushButton#addPayment:hover{
             background: #0f0;
         }
         
